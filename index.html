@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>bruce lee log</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Noto+Serif+TC:wght@700;900&display=swap"
+        rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        :root {
+            --paper-color: #f0ede4;
+            --ink-color: #1a1a1a;
+            --blue-ink: #1e2a5e;
+            --stamp-red: #af2828;
+        }
+
+        body {
+            background-color: #0a0a0a;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px;
+            font-family: 'Times New Roman', serif;
+            color: #888;
+        }
+
+        /* Card container with forensic fold */
+        .card {
+            background-color: var(--paper-color);
+            background-image: url('https://www.transparenttextures.com/patterns/natural-paper.png');
+            width: 100%;
+            max-width: 500px;
+            padding: 25px;
+            box-shadow: 20px 20px 60px rgba(0, 0, 0, 0.8);
+            border-radius: 2px;
+            border: 1px solid #c4bca8;
+            position: relative;
+            transform: rotate(-0.3deg);
+            overflow: hidden;
+            color: var(--ink-color);
+            transition: transform 0.5s ease;
+        }
+
+        /* Vertical Center Fold */
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 1px;
+            height: 100%;
+            background: linear-gradient(to right, rgba(0, 0, 0, 0.05), rgba(255, 255, 255, 0.3), rgba(0, 0, 0, 0.05));
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        /* Stamp UX */
+        .stamp {
+            position: absolute;
+            bottom: 80px;
+            right: 50px;
+            width: 80px;
+            height: 80px;
+            border: 4px solid var(--stamp-red);
+            color: var(--stamp-red);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-family: 'Noto Serif TC', serif;
+            font-weight: 900;
+            font-size: 26px;
+            line-height: 1;
+            transform: rotate(-15deg) scale(1.5);
+            opacity: 0;
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            mix-blend-mode: multiply;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .stamp.visible {
+            opacity: 0.8;
+            transform: rotate(-15deg) scale(1);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 5px;
+        }
+
+        .chinese-title {
+            font-family: 'Noto Serif TC', serif;
+            font-size: 24px;
+            letter-spacing: 5px;
+            color: #111;
+        }
+
+        .gym-name {
+            font-size: 21px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-top: -2px;
+        }
+
+        .list-subtitle {
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: underline;
+            margin-bottom: 10px;
+        }
+
+        .header-info {
+            display: grid;
+            grid-template-columns: 1.8fr 0.6fr 1.6fr;
+            margin-bottom: 15px;
+            font-size: 17px;
+            border-bottom: 1px solid #111;
+            padding-bottom: 5px;
+        }
+
+        .handwritten {
+            font-family: 'Architects Daughter', cursive;
+            color: var(--blue-ink);
+            background: transparent;
+            border: none;
+            font-size: 18px;
+            text-transform: uppercase;
+            text-shadow: 0.3px 0.3px 0.5px rgba(30, 42, 94, 0.2);
+        }
+
+        .handwritten[readonly] {
+            color: #000;
+            cursor: default;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 2.5px solid #111;
+        }
+
+        th,
+        td {
+            border: 1.5px solid #111;
+            text-align: center;
+            height: 32px;
+        }
+
+        th {
+            font-size: 11px;
+            font-weight: bold;
+            background: rgba(0, 0, 0, 0.04);
+        }
+
+        .exercise-name {
+            text-align: left;
+            padding-left: 8px;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        footer {
+            margin-top: 15px;
+            text-align: center;
+            font-size: 14px;
+            border-top: 1px solid #111;
+            padding-top: 5px;
+        }
+
+        /* Navigation */
+        .day-nav {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .day-btn {
+            background: #1a1a1a;
+            color: #555;
+            border: 1px solid #333;
+            padding: 6px 14px;
+            cursor: pointer;
+            font-size: 11px;
+            border-radius: 3px;
+        }
+
+        .day-btn.active {
+            color: #fff;
+            border-color: #8b0000;
+            background: #3d0000;
+        }
+
+        .action-bar {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .action-btn {
+            background: #fff;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            font-size: 11px;
+            cursor: pointer;
+            border-radius: 2px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .action-btn:hover {
+            background: #ddd;
+        }
+
+        /* Shutter flash effect */
+        #flash {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 100;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="flash"></div>
+
+    <div class="day-nav">
+        <button class="day-btn" id="btn-original" onclick="loadDay('original')">BRUCE LEE</button>
+        <button class="day-btn active" id="btn-1" onclick="loadDay(1)">DAY 1</button>
+        <button class="day-btn" id="btn-2" onclick="loadDay(2)">DAY 2</button>
+        <button class="day-btn" id="btn-3" onclick="loadDay(3)">DAY 3</button>
+        <button class="day-btn" id="btn-4" onclick="loadDay(4)">DAY 4</button>
+        <button class="day-btn" id="btn-5" onclick="loadDay(5)">DAY 5</button>
+    </div>
+
+    <div class="card" id="capture-area">
+        <div id="status-stamp" class="stamp">克強<br>認證</div>
+        <header>
+            <div class="chinese-title">克 強 健 力 學 院</div>
+            <div class="gym-name">HAK KEUNG GYMNASIUM</div>
+            <div class="list-subtitle">運動程序 Exercise List.</div>
+        </header>
+
+        <div class="header-info">
+            <div>Name: <input type="text" id="user-name" class="handwritten" style="width: 70%;"></div>
+            <div>Sex: <input type="text" id="user-sex" class="handwritten" style="width: 40%;"></div>
+            <div>Date: <input type="text" id="date-field" class="handwritten" style="width: 60%;"></div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>運動名稱<br>EXERCISE</th>
+                    <th>組數<br>SETS</th>
+                    <th>磅<br>LBS</th>
+                    <th>次數<br>TIMES</th>
+                </tr>
+            </thead>
+            <tbody id="workout-body"></tbody>
+        </table>
+
+        <footer>
+            <span style="font-family: 'Noto Serif TC', serif; font-size: 18px;">此表請勿攜出院外</span><br>
+            <span style="font-style: italic;">Please do not take it away</span>
+        </footer>
+    </div>
+
+    <div class="action-bar">
+        <button class="action-btn" id="stamp-btn" onclick="toggleStamp()">STAMP LOG</button>
+        <button class="action-btn" onclick="downloadImage()">TAKE PHOTO (DOWNLOAD)</button>
+    </div>
+
+    <script>
+        let currentDayKey = 1;
+
+        const workoutDays = {
+            'original': {
+                date: "MAY 27 1965", name: "BRUCE LEE", sex: "M",
+                ex: [
+                    ["SQUAT", "3", "95", "10"], ["FRENCH PRESS 1", "4", "64", "6"], ["INCLINE CURL", "4", "35", "6"], ["FRENCH PRESS 2", "4", "64", "6"], ["\"CON\" CURL", "4", "35", "6"], ["PUSH UP", "3", "70-80", "10"], ["TWO HAND CURL", "3", "70-80", "8"], ["TRICEP STRETCH", "3", "3", "8"], ["DUMBBELL CIRCLE", "4", "16", "INF."], ["REVERSE CURL", "4", "64", "6"], ["WRIST CURL 1", "4", "64", "INF."], ["WRIST CURL 2", "4", "10", "INF."], ["SIT UP / CALF RAISE", "5", "B.W.", "12/20"]
+                ]
+            },
+            1: { date: "DEC 28 2025", name: "USER", sex: "M", ex: [["DB Shoulder Press", "3", "35", "10"], ["Pull-ups", "4", "BW", "FAIL"], ["Cable Rows", "3", "120", "12"]] },
+            2: { date: "DEC 28 2025", name: "USER", sex: "M", ex: [["Deadlift", "3", "225", "5"], ["Box Jumps", "4", "BW", "8"]] },
+            3: { date: "DEC 28 2025", name: "USER", sex: "M", ex: [["Forearm Roller", "3", "15", "FAIL"], ["Wrist Curls", "4", "45", "15"]] },
+            4: { date: "DEC 28 2025", name: "USER", sex: "M", ex: [["Dragon Flags", "3", "BW", "5"], ["Plank", "3", "BW", "60s"]] },
+            5: { date: "DEC 28 2025", name: "USER", sex: "M", ex: [["Clean & Press", "5", "95", "8"], ["Shadow Boxing", "3", "-", "3m"]] }
+        };
+
+        function toggleStamp() {
+            if (currentDayKey === 'original') return;
+            const stamp = document.getElementById('status-stamp');
+            const isVisible = stamp.classList.toggle('visible');
+            localStorage.setItem(`hk-day-${currentDayKey}-stamp`, isVisible);
+        }
+
+        function loadDay(dayKey) {
+            currentDayKey = dayKey;
+            const isOriginal = (dayKey === 'original');
+
+            document.querySelectorAll('.day-btn').forEach(btn => btn.classList.remove('active'));
+            const btn = isOriginal ? document.getElementById('btn-original') : document.getElementById(`btn-${dayKey}`);
+            if (btn) btn.classList.add('active');
+
+            document.getElementById('stamp-btn').style.display = isOriginal ? 'none' : 'block';
+
+            const dayData = workoutDays[dayKey];
+            const nameField = document.getElementById('user-name');
+            const sexField = document.getElementById('user-sex');
+            const dateField = document.getElementById('date-field');
+
+            nameField.value = isOriginal ? dayData.name : (localStorage.getItem(`hk-day-${dayKey}-name`) || dayData.name);
+            sexField.value = isOriginal ? dayData.sex : (localStorage.getItem(`hk-day-${dayKey}-sex`) || dayData.sex);
+            dateField.value = isOriginal ? dayData.date : (localStorage.getItem(`hk-day-${dayKey}-date`) || dayData.date);
+
+            [nameField, sexField, dateField].forEach(f => {
+                f.readOnly = isOriginal;
+                f.oninput = isOriginal ? null : (e) => localStorage.setItem(`hk-day-${dayKey}-${f.id.split('-')[1]}`, e.target.value);
+            });
+
+            document.getElementById('status-stamp').classList.toggle('visible', !isOriginal && localStorage.getItem(`hk-day-${dayKey}-stamp`) === 'true');
+
+            const tbody = document.getElementById('workout-body');
+            tbody.innerHTML = "";
+            for (let i = 0; i < 13; i++) {
+                const def = dayData.ex[i] || ["", "", "", ""];
+                const storageKey = `hk-day-${dayKey}-row-${i}`;
+                const val = isOriginal ? def : [
+                    localStorage.getItem(`${storageKey}-ex`) || def[0],
+                    localStorage.getItem(`${storageKey}-sets`) || def[1],
+                    localStorage.getItem(`${storageKey}-lbs`) || def[2],
+                    localStorage.getItem(`${storageKey}-times`) || def[3]
+                ];
+
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                <td class="exercise-name"><input type="text" class="handwritten" style="width:95%" value="${val[0]}" ${isOriginal ? 'readonly' : `oninput="localStorage.setItem('${storageKey}-ex', this.value)"`}></td>
+                <td><input type="text" class="handwritten" style="width:40px" value="${val[1]}" ${isOriginal ? 'readonly' : `oninput="localStorage.setItem('${storageKey}-sets', this.value)"`}></td>
+                <td><input type="text" class="handwritten" style="width:60px" value="${val[2]}" ${isOriginal ? 'readonly' : `oninput="localStorage.setItem('${storageKey}-lbs', this.value)"`}></td>
+                <td><input type="text" class="handwritten" style="width:70px" value="${val[3]}" ${isOriginal ? 'readonly' : `oninput="localStorage.setItem('${storageKey}-times', this.value)"`}></td>
+            `;
+                tbody.appendChild(row);
+            }
+        }
+
+        async function downloadImage() {
+            const flash = document.getElementById('flash');
+            flash.style.opacity = '1';
+            setTimeout(() => flash.style.opacity = '0', 100);
+
+            const card = document.getElementById('capture-area');
+            const originalTransform = card.style.transform;
+            card.style.transform = "none";
+
+            const canvas = await html2canvas(card, { backgroundColor: "#0a0a0a", scale: 2 });
+            card.style.transform = originalTransform;
+
+            const link = document.createElement('a');
+            link.download = `HakKeung_Day${currentDayKey}.png`;
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+
+        window.onload = () => loadDay(1);
+    </script>
+</body>
+
+</html>
