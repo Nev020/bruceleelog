@@ -32,6 +32,10 @@ The data structure is rooted in the 1965 original. While the system allows for m
 ## IV. Technical Schema (The Backup System)
 For long-term preservation, the **BACKUP DATA** feature distills the browser's internal storage into a single **JSON** (JavaScript Object Notation) string. This allows users to move their heritage data between devices or save it in a simple text file.
 
+## V. Technical Schema (The Backup System)
+
+For long-term preservation, the **BACKUP DATA** feature distills the browser's internal storage into a single **JSON** (JavaScript Object Notation) string. This allows users to move their heritage data between devices or save it in a simple text file.
+
 **Example Schema Structure:**
 ```json
 {
@@ -43,13 +47,3 @@ For long-term preservation, the **BACKUP DATA** feature distills the browser's i
   "hk-day-1-row-0-times": "6",
   "hk-day-1-stamp": "true"
 }
-
-V. Usage
-Capture Intent: Use the STAMP LOG feature to mark completion.
-
-Physical Translation: Utilize the TAKE PHOTO function to generate a high-fidelity .png of your log.
-
-Data Integrity: Use the BACKUP system to copy your history to your clipboard and save it in a secure Note.
-
-Restoration: Should the browser memory be cleared, use the restoreData() function with your saved JSON string to recover your logs.
-
